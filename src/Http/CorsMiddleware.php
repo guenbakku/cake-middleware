@@ -25,12 +25,11 @@ class CorsMiddleware
 
     public function __invoke($request, $response, $next)
     {
-        $response = $response->cors($request)
-            ->allowOrigin($this->getConfig('allowOrigin'))
-            ->build();
+        $cors = $response->cors($request)
+            ->allowOrigin($this->getConfig('allowOrigin'));
 
         if ($request->getMethod() == 'OPTIONS') {
-            $cors = $response->cors($request)
+            $cors = $cors
                 ->allowMethods($this->getConfig('allowMethods'))
                 ->allowHeaders($this->getConfig('allowHeaders'))
                 ->exposeHeaders($this->getConfig('exposeHeaders'))
@@ -41,10 +40,10 @@ class CorsMiddleware
             }
 
             $response = $cors->build();
-
             return $response;
         }
 
+        $response = $cors->build();
         return $next($request, $response);
     }
 }
