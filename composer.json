@@ -1,0 +1,30 @@
+{
+    "name": "guenbakku/cake-middleware",
+    "description": "Collection of middlewares for CakePHP",
+    "type": "cakephp-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "NVB",
+            "homepage": "http://nvb-online.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "cakephp/cakephp": ">=3.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7|^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Guenbakku\\Middleware\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Guenbakku\\Middleware\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}
