@@ -25,13 +25,11 @@ class CorsMiddleware
 
     public function __invoke($request, $response, $next)
     {
-        $response = $next($request, $response);
-
-        $cors = $response->cors($request)
-            ->allowOrigin($this->getConfig('allowOrigin'));
-
+        // Terminate runner immediately if request method is `OPTIONS`
+        // otherwise delegate request/response to next middleware.
         if ($request->getMethod() == 'OPTIONS') {
-            $cors = $cors
+            $cors = $response->cors($request)
+                ->allowOrigin($this->getConfig('allowOrigin'))
                 ->allowMethods($this->getConfig('allowMethods'))
                 ->allowHeaders($this->getConfig('allowHeaders'))
                 ->exposeHeaders($this->getConfig('exposeHeaders'))
@@ -40,9 +38,15 @@ class CorsMiddleware
             if ($this->getConfig('allowCredentials')) {
                 $cors->allowCredentials();
             }
+
+            $response = $cors->build();
+        } else {
+            $response = $next($request, $response);
+            $response = $response->cors($request)
+                ->allowOrigin($this->getConfig('allowOrigin'))
+                ->build();
         }
 
-        $response = $cors->build();
         return $response;
     }
 }
