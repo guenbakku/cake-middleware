@@ -25,6 +25,8 @@ class CorsMiddleware
 
     public function __invoke($request, $response, $next)
     {
+        $response = $next($request, $response);
+
         $cors = $response->cors($request)
             ->allowOrigin($this->getConfig('allowOrigin'));
 
@@ -38,12 +40,9 @@ class CorsMiddleware
             if ($this->getConfig('allowCredentials')) {
                 $cors->allowCredentials();
             }
-
-            $response = $cors->build();
-            return $response;
         }
 
         $response = $cors->build();
-        return $next($request, $response);
+        return $response;
     }
 }

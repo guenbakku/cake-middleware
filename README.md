@@ -23,7 +23,7 @@ composer require guenbakku/cake-middleware
 
 Add `Access-Control-Allow-Origin` and other related headers to resources on an API, make that API can be called via cross origin.
 
-Usage:
+NOTE: `CorsMiddleware` should be inserted into the first position of Middleware queue (before `Cake\Error\Middleware\ErrorHandlerMiddleware`) to make it still work correctly in case there is exception thrown from inside of your application.
 
 ~~~php
 
@@ -38,6 +38,7 @@ public function middleware($middlewareQueue)
     // Use with default settings
     $middlewareQueue
         ->add(new CorsMiddleware());
+        // Other middlewares...
 
     // Use with customize settings
     $middlewareQueue
@@ -49,6 +50,7 @@ public function middleware($middlewareQueue)
             'exposeHeaders' => ['Link'],
             'maxAge' => 300,
         ]));
+        // Other middlewares...
 
     return $middlewareQueue;
 }
