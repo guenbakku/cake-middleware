@@ -42,9 +42,12 @@ class CorsMiddleware
             $response = $cors->build();
         } else {
             $response = $next($request, $response);
-            $response = $response->cors($request)
-                ->allowOrigin($this->getConfig('allowOrigin'))
-                ->build();
+            // Redirect response does not contain method `cors`
+            if (method_exists($response, 'cors')) {
+                $response = $response->cors($request)
+                    ->allowOrigin($this->getConfig('allowOrigin'))
+                    ->build();
+            }
         }
 
         return $response;
