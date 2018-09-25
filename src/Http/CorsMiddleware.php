@@ -11,8 +11,8 @@ class CorsMiddleware
 
     protected $_defaultConfig = [
         'allowOrigin' => ['*'],
-        'allowMethods' => ['*'],
-        'allowHeaders' => ['*'],
+        'allowMethods' => null,
+        'allowHeaders' => null,
         'allowCredentials' => true,
         'exposeHeaders' => ['Link'],
         'maxAge' => 300,
@@ -28,6 +28,7 @@ class CorsMiddleware
         // Terminate runner immediately if request method is `OPTIONS`
         // otherwise delegate request/response to next middleware.
         if ($request->getMethod() == 'OPTIONS') {
+            $this->_setDefaultCorsBuidlerOptions($request);
             $cors = $response->cors($request)
                 ->allowOrigin($this->getConfig('allowOrigin'))
                 ->allowMethods($this->getConfig('allowMethods'))
@@ -42,7 +43,9 @@ class CorsMiddleware
             $response = $cors->build();
         } else {
             $response = $next($request, $response);
+
             // Redirect response does not contain method `cors`
+            // so we need to check if method `cors` exists before using it.
             if (method_exists($response, 'cors')) {
                 $response = $response->cors($request)
                     ->allowOrigin($this->getConfig('allowOrigin'))
@@ -51,5 +54,27 @@ class CorsMiddleware
         }
 
         return $response;
+    }
+
+    /**
+     * Set default value to some options of CorsBuilder.
+     * This will use value of headers of OPTIONS request as
+     * default value of related headers of response.
+     */
+    protected function _setDefaultCorsBuidlerOptions($request)
+    {
+        if ($this->getConfig('allowHeaders') === null) {
+            $this->setConfig(
+                'allowHeaders',
+                explode(',', $request->getHeaderLine('Access-Control-Request-Headers'))
+            );
+        }
+
+        if ($this->getConfig('allowMethods') === null) {
+            $this->setConfig(
+                'allowMethods',
+                explode(',', $request->getHeaderLine('Access-Control-Request-Method'))
+            );
+        }
     }
 }
