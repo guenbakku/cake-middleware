@@ -3,6 +3,8 @@
 namespace Guenbakku\Middleware\Http;
 
 use Cake\Core\InstanceConfigTrait;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class CorsMiddleware
 {
@@ -23,7 +25,14 @@ class CorsMiddleware
         $this->setConfig($config);
     }
 
-    public function __invoke($request, $response, $next)
+    /**
+     * Handle invoking middleware
+     *
+     * @param \Psr\Http\Message\ResponseInterface $request The request.
+     * @param \Psr\Http\Message\ResponseInterface $response The response.
+     * @param callable $next The next middleware to call.
+     */
+    public function __invoke(ResponseInterface $request, ServerRequestInterface $response, $next)
     {
         // Terminate runner immediately if request method is `OPTIONS`
         // otherwise delegate request/response to next middleware.
@@ -60,8 +69,10 @@ class CorsMiddleware
      * Set default value to some options of CorsBuilder.
      * This will use value of headers of OPTIONS request as
      * default value of related headers of response.
+     *
+     * @param \Psr\Http\Message\ResponseInterface $request The request.
      */
-    protected function _setDefaultCorsBuidlerOptions($request)
+    protected function _setDefaultCorsBuidlerOptions(ServerRequestInterface $request)
     {
         if ($this->getConfig('allowHeaders') === null) {
             $this->setConfig(
