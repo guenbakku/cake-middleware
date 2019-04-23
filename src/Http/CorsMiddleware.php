@@ -28,11 +28,11 @@ class CorsMiddleware
     /**
      * Handle invoking middleware
      *
-     * @param \Psr\Http\Message\ResponseInterface $request The request.
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Psr\Http\Message\ResponseInterface $response The response.
      * @param callable $next The next middleware to call.
      */
-    public function __invoke(ResponseInterface $request, ServerRequestInterface $response, $next)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
         // Terminate runner immediately if request method is `OPTIONS`
         // otherwise delegate request/response to next middleware.
