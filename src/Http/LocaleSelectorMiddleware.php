@@ -4,10 +4,9 @@
  * Different with the original middleware, this only gets the first 2
  * characters in locale code.
  */
-namespace App\Middleware;
+namespace Guenbakku\Middleware\Http;
 
 use Cake\I18n\I18n;
-use Locale;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -46,7 +45,7 @@ class LocaleSelectorMiddleware
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
-        $locale = Locale::acceptFromHttp($request->getHeaderLine('Accept-Language'));
+        $locale = \Locale::acceptFromHttp($request->getHeaderLine('Accept-Language'));
         if (!$locale) {
             return $next($request, $response);
         }

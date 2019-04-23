@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Middleware;
+namespace Guenbakku\Middleware\Http;
 
 use Cake\Core\InstanceConfigTrait;
 use Cake\Core\Configure;
 use Cake\Utility\Hash;
-use Cake\I18n\Time;
 use Cake\Http\Exception\BadRequestException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
